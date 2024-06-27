@@ -6,6 +6,13 @@ const apiUrl = (() => {
 
 let config;
 
+// Mapping of category values to descriptive names
+const categoryNames = {
+  'Category1': 'Community and Social Events',
+  'Category2': 'Items for Sale or Rent',
+  'Category3': 'Services Offered'
+};
+
 async function loadConfig() {
   try {
     const response = await fetch(`${apiUrl}/config`);
@@ -52,42 +59,49 @@ document.getElementById('uploadForm').addEventListener('submit', async (e) => {
 });
 
 async function loadImages(category = '') {
-    showLoading();
-    try {
-      console.log('Fetching images from:', `${apiUrl}/images`);
-      const response = await fetch(`${apiUrl}/images`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+  showLoading();
+  try {
+    console.log('Fetching images from:', `${apiUrl}/images`);
+    const response = await fetch(`${apiUrl}/images`);
+    if (!response.ok) {
+      if (response.status === 404) {
+        console.log('No images found or endpoint not available');
+        const gallery = document.getElementById('gallery');
+        if (gallery) {
+          gallery.innerHTML = '<p>No images available at this time.</p>';
+        }
+        return;
       }
-      const data = await response.json();
-      console.log('Received image data:', data);
-      if (!data || !data.images) {
-        throw new Error('Invalid response format');
-      }
-      const gallery = document.getElementById('gallery');
-      gallery.innerHTML = '';
-      
-      data.images.filter(img => category === '' || img.Category === category).forEach(img => {
-        const imgUrl = `${apiUrl}/images/${img.ImageName}`;
-        console.log('Image URL:', imgUrl); // Add this line
-        const imgElement = document.createElement('div');
-        imgElement.className = 'gallery-item';
-        imgElement.innerHTML = `
-          <img src="${imgUrl}" alt="${img.ImageName}">
-          <button class="delete-btn" data-id="${img.ID}">X</button>
-          <span class="category">${img.Category}</span>
-        `;
-        gallery.appendChild(imgElement);
-      });
-      
-      addDeleteListeners();
-    } catch (error) {
-      console.error('Error loading images:', error);
-      document.getElementById('message').textContent = `Error loading images: ${error.message}`;
-    } finally {
-      hideLoading();
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-  } 
+    const data = await response.json();
+    console.log('Received image data:', data);
+    if (!data || !data.images) {
+      throw new Error('Invalid response format');
+    }
+    const gallery = document.getElementById('gallery');
+    gallery.innerHTML = '';
+    
+    data.images.filter(img => category === '' || img.Category === category).forEach(img => {
+      const imgUrl = `${apiUrl}/images/${img.ImageName}`;
+      console.log('Image URL:', imgUrl);
+      const imgElement = document.createElement('div');
+      imgElement.className = 'gallery-item';
+      imgElement.innerHTML = `
+        <img src="${imgUrl}" alt="${img.ImageName}">
+        <button class="delete-btn" data-id="${img.ID}">X</button>
+      `;
+      gallery.appendChild(imgElement);
+    });
+    
+    addDeleteListeners();
+  } catch (error) {
+    console.error('Error loading images:', error);
+    document.getElementById('message').textContent = `Error loading images: ${error.message}`;
+  } finally {
+    hideLoading();
+  }
+}
 
 function showLoading() {
   document.getElementById('loading').style.display = 'block';
@@ -116,7 +130,7 @@ async function loadImagesByCategory() {
       categorizedImages.forEach(category => {
         const categoryElement = document.createElement('div');
         categoryElement.className = 'category-section';
-        categoryElement.innerHTML = `<h2>${category.category}</h2>`;
+        categoryElement.innerHTML = `<h2>${categoryNames[category.category] || category.category}</h2>`;
         
         const imagesElement = document.createElement('div');
         imagesElement.className = 'category-images';
@@ -180,9 +194,21 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log('DOM content loaded, initializing...');
   loadImages();
   
+  // Update category filter options
+  const categoryFilter = document.getElementById('categoryFilter');
+  if (categoryFilter) {
+    Object.entries(categoryNames).forEach(([value, name]) => {
+      const option = categoryFilter.querySelector(`option[value="${value}"]`);
+      if (option) {
+        option.textContent = name;
+      }
+    });
+  }
+
   // Add a button to switch between views
   const viewToggle = document.createElement('button');
   viewToggle.textContent = 'Toggle Category View';
+  viewToggle.classList.add('view-toggle-btn');
   viewToggle.addEventListener('click', () => {
     if (viewToggle.textContent === 'Toggle Category View') {
       loadImagesByCategory();
@@ -192,5 +218,12 @@ document.addEventListener('DOMContentLoaded', () => {
       viewToggle.textContent = 'Toggle Category View';
     }
   });
-  document.querySelector('.container').insertBefore(viewToggle, document.getElementById('gallery'));
+  
+  // Insert the button into the new container
+  const viewToggleContainer = document.getElementById('viewToggleContainer');
+  if (viewToggleContainer) {
+    viewToggleContainer.appendChild(viewToggle);
+  } else {
+    console.error('viewToggleContainer not found in the DOM');
+  }
 });
