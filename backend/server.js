@@ -6,15 +6,12 @@ const cors = require('cors');
 const AWS = require('aws-sdk');
 
 const app = express();
-const port = process.env.BACKEND_PORT;
-
-app.use(cors());
-app.use(express.json());
+const port = process.env.BACKEND_PORT || 3000;
 
 console.log('S3 Bucket Name:', process.env.S3_BUCKET_NAME);
 const s3 = new AWS.S3();
 
-// Multer configuration (remove the duplicate)
+// Multer configuration
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
@@ -34,6 +31,16 @@ connection.connect((err) => {
   console.log('Connected to MySQL database');
 });
 
+// CORS configuration
+const corsOptions = {
+  origin: process.env.FRONTEND_URL,
+  optionsSuccessStatus: 200
+};
+
+// Middleware
+app.use('/api', cors(corsOptions));
+app.use('/api', express.json());
+
 // Helper function to get the image from S3
 function getImageFromS3(bucket, key, res) {
   const params = {
@@ -50,6 +57,11 @@ function getImageFromS3(bucket, key, res) {
     .pipe(res);
 }
 
+// Health check route
+app.get('/api/health', (req, res) => {
+  res.status(200).send('OK');
+});
+
 // Proxy endpoint to serve images
 app.get('/api/images/:key', (req, res) => {
   const key = req.params.key;
@@ -58,6 +70,7 @@ app.get('/api/images/:key', (req, res) => {
 
 // Combined upload and metadata saving
 app.post('/api/upload', upload.single('image'), (req, res) => {
+    console.log('Upload request received');
     if (!req.file) {
       return res.status(400).json({ message: 'No file uploaded' });
     }
@@ -65,7 +78,7 @@ app.post('/api/upload', upload.single('image'), (req, res) => {
     const { category } = req.body;
     const s3Key = `${Date.now()}-${req.file.originalname}`;
   
-    console.log('Uploading file:', s3Key); // Add logging
+    console.log('Uploading file:', s3Key);
 
     const uploadParams = {
       Bucket: process.env.S3_BUCKET_NAME,
@@ -79,20 +92,19 @@ app.post('/api/upload', upload.single('image'), (req, res) => {
         return res.status(500).json({ message: 'Error uploading to S3', error: s3Err.message });
       }
   
-      console.log('File uploaded successfully to S3'); // Add logging
+      console.log('File uploaded successfully to S3');
 
       const query = 'INSERT INTO Images (ImageName, Category) VALUES (?, ?)';
       connection.query(query, [s3Key, category], (err, results) => {
         if (err) {
           console.error('Error saving image metadata:', err);
-          // If database insert fails, we should delete the uploaded S3 object
           s3.deleteObject({ Bucket: process.env.S3_BUCKET_NAME, Key: s3Key }, (deleteErr) => {
             if (deleteErr) console.error('Error deleting S3 object after failed DB insert:', deleteErr);
           });
           return res.status(500).json({ message: 'Error saving image metadata', error: err.message });
         }
   
-        console.log('Image metadata saved to database'); // Add logging
+        console.log('Image metadata saved to database');
 
         res.json({ 
           message: 'Image uploaded and metadata saved successfully', 
@@ -104,9 +116,9 @@ app.post('/api/upload', upload.single('image'), (req, res) => {
     });
 });
 
-
 // Get all images
 app.get('/api/images', (req, res) => {
+    console.log('Fetching all images');
     const query = 'SELECT * FROM Images';
     
     connection.query(query, (err, results) => {
@@ -129,6 +141,7 @@ app.get('/api/images', (req, res) => {
 
 // Delete an image
 app.delete('/api/images/:id', (req, res) => {
+  console.log('Delete request received for image ID:', req.params.id);
   const query = 'SELECT ImageName FROM Images WHERE ID = ?';
   
   connection.query(query, [req.params.id], (err, results) => {
@@ -171,6 +184,7 @@ app.delete('/api/images/:id', (req, res) => {
 
 // Get all images grouped by category
 app.get('/api/categories', (req, res) => {
+    console.log('Fetching images by category');
     const query = 'SELECT Category, GROUP_CONCAT(ID) as ImageIDs, GROUP_CONCAT(ImageName) as ImageNames FROM Images GROUP BY Category';
     
     connection.query(query, (err, results) => {
@@ -193,6 +207,12 @@ app.get('/api/categories', (req, res) => {
 
 app.get('/api/config', (req, res) => {
     res.json({ message: 'Config not needed for proxy URLs' });
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
 });
 
 app.listen(port, () => {
