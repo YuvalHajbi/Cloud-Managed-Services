@@ -1,0 +1,46 @@
+# Node.js dependencies
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Environment variables
+.env
+envs.sh
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# IDE-specific files
+.vscode/
+.idea/ 
+
+# Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.backup
+
+# Crash log files
+crash.log
+
+# Exclude override files as they are usually local
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Exclude CLI configuration files
+.terraformrc
+terraform.rc
+
+# Terraform plan files
+*.tfplan
+
+# Terraform variable files
+*.tfvars
+*.tfvars.json

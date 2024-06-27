@@ -1,0 +1,12 @@
+{
+    "name": "image-upload-frontend",
+    "version": "1.0.0",
+    "description": "Frontend server for image upload application",
+    "main": "app.js",
+    "scripts": {
+      "start": "node app.js"
+    },
+    "dependencies": {
+      "express": "^4.17.1"
+    }
+  }

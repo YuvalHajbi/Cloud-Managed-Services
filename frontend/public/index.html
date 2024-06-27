@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload and Gallery</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .category-section {
+            margin-bottom: 20px;
+        }
+        .category-images {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .loading {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            color: #333;
+        }
+        .file-input-wrapper {
+            display: flex;
+            align-items: center;
+        }
+        .file-input-label {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            <img src="pin2.jpeg" alt="Title Image" class="title-image" width="50" height="50">
+            Bulletin Board
+        </h1>
+        <form id="uploadForm" enctype="multipart/form-data">
+            <h3 class="ad-title">Add an advertisement:</h3>
+            <div class="file-input-wrapper">
+                <input type="file" name="image" id="imageInput" accept="image/*" required>
+                <label for="imageInput" class="file-input-label">Choose a file</label>
+                <span id="file-name">No file chosen</span>
+            </div>
+            <select id="categoryInput" required>
+                <option value="">Select a category</option>
+                <option value="Category1">Community and Social Events</option>
+                <option value="Category2">Items for Sale or Rent</option>
+                <option value="Category3">Services Offered</option>
+            </select>
+            <button type="submit" class="submit-btn">Upload</button>
+        </form>
+        <div id="message" class="message"></div>
+        <div id="preview" class="preview"></div>
+        
+        <div class="gallery-section">
+            <h2>Advertisements</h2>
+            <select id="categoryFilter">
+                <option value="">All Categories</option>
+                <option value="Category1">Community and Social Events</option>
+                <option value="Category2">Items for Sale or Rent</option>
+                <option value="Category3">Services Offered</option>
+            </select>
+            <div id="viewToggleContainer"></div>
+            <div id="gallery" class="gallery"></div>
+        </div>
+    </div>
+    <div id="loading" class="loading">Loading...</div>
+    <script src="script.js"></script>
+</body>
+</html>

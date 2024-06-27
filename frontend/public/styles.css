@@ -1,0 +1,208 @@
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.container {
+    width: 80%;
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border: 2px solid #b49765; /* This line adds the border */
+}
+
+h1 {
+    text-align: center;
+    color: #007B9A;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+    font-size: 2.5em;
+}
+
+
+.gallery-section h2,
+.gallery-section select {
+    color: #fff;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.file-input-wrapper {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.file-input-wrapper input[type=file] {
+    font-size: 100px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+}
+
+.file-input-label {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #b49765;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.file-input-label:hover {
+    background-color: #e4ded3;
+}
+
+.submit-btn {
+    padding: 10px 20px;
+    background-color: #007B9A;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.submit-btn:hover {
+    background-color: #e4ded3;
+}
+
+.message {
+    margin-top: 1rem;
+    padding: 10px;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.success {
+    background-color: #dff0d8;
+    color: #3c763d;
+}
+
+.error {
+    background-color: #f2dede;
+    color: #a94442;
+}
+
+.preview {
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.preview img {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: 4px;
+}
+
+.gallery-item {
+    position: relative;
+    display: inline-block;
+    margin: 10px;
+    background-color: #fff;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+.gallery-item img {
+    max-width: 100px;
+    max-height: 100px;
+    border-radius: 4px;
+}
+
+.delete-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    padding: 5px;
+    font-size: 12px;
+}
+.gallery-section {
+    margin-top: 2rem;
+    padding: 2rem;
+    background-image: url('backgroung.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 5px;
+}
+
+.gallery-section h2,
+.gallery-section select {
+    color: #fff;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}
+
+.gallery {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 1rem;
+    border-radius: 5px;
+}
+.ad-title {
+    font-size: 1em;
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+#categoryInput, #categoryFilter {
+    width: 100%; /* Makes the select element full width of its container */
+    padding: 10px; /* Increases padding inside the select */
+    font-size: 16px; /* Increases font size */
+    border: 1px solid #ccc; /* Adds a border */
+    border-radius: 4px; /* Rounds the corners */
+    background-color: white; /* Sets background color */
+    box-sizing: border-box; /* Includes padding and border in element's total width and height */
+    color: black; /* Sets font color to black */
+}
+#categoryFilter{
+    width: 50%;
+}
+
+#categoryInput option, #categoryFilter option {
+    padding: 10px; /* Adds padding to the option elements */
+    color: black; /* Sets option font color to black */
+}
+
+/* Styles for when the select is focused */
+#categoryInput:focus, #categoryFilter:focus {
+    outline: none;
+    border-color: #008CBA; /* Matches your submit button color */
+    box-shadow: 0 0 5px rgba(199, 160, 88, 0.594); /* Adds a subtle glow effect */
+}
+#viewToggleContainer {
+    text-align: center;
+    margin: 10px 0;
+}
+
+.view-toggle-btn {
+    padding: 10px 20px;
+    background-color: #008CBA;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.view-toggle-btn:hover {
+    background-color: #007b9a9b;
+}
