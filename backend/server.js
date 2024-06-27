@@ -6,7 +6,7 @@ const cors = require('cors');
 const AWS = require('aws-sdk');
 
 const app = express();
-const port = process.env.BACKEND_PORT || 3000;
+const port = process.env.BACKEND_PORT;
 
 console.log('S3 Bucket Name:', process.env.S3_BUCKET_NAME);
 const s3 = new AWS.S3();
