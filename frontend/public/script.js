@@ -1,5 +1,5 @@
 const apiUrl = (() => {
-    const url = `${window.location.protocol}//${window.location.host}/api`;
+    const url = `${window.location.protocol}//${window.location.hostname}:3010/api`;
     console.log('API URL:', url);
     return url;
 })();
