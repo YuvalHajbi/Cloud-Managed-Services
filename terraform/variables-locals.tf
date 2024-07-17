@@ -5,7 +5,7 @@ locals {
   common_tags = {
     project = "bulletin board" 
   }
-  ec2_key_name  = "DSYkeypair" 
-  app_ami       = "ami-01d2c7adb1654b168" 
+  ec2_key_name  = "DSY" 
+  app_ami       = "ami-050f8a40b32f3d53d" 
   instance_type = "t2.micro"
 }
